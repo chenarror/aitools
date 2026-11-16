@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>龍崎青農｜AI 製圖 × 表單 × 網站 課堂小抄</title>
+  <style>
+    :root {
+      --green: #2f5d3a;
+      --green-light: #e9f2eb;
+      --cream: #faf8f4;
+      --card: #ffffff;
+      --text: #222823;
+      --muted: #5c665e;
+      --border: #dce4dd;
+      --accent: #d97706;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      line-height: 1.65;
+      padding: 20px 16px 60px;
+    }
+    .container { max-width: 860px; margin: 0 auto; }
+    header {
+      background: var(--green);
+      color: #fff;
+      padding: 24px 22px;
+      border-radius: 16px;
+      margin-bottom: 20px;
+    }
+    header h1 { margin: 0 0 6px; font-size: 1.45rem; }
+    header p { margin: 0; opacity: 0.9; font-size: 0.95rem; }
+    .steps-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .step-pill {
+      background: var(--green-light);
+      color: var(--green);
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 18px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+    .card h2 {
+      margin: 0 0 10px;
+      font-size: 1.15rem;
+      color: var(--green);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      background: #fff;
+    }
+    input[type="text"]:focus {
+      outline: 2px solid var(--green);
+      border-color: transparent;
+    }
+    .prompt-box {
+      background: #f5f7f5;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 0.93rem;
+      white-space: pre-wrap;
+      margin: 10px 0 12px;
+    }
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    button.copy-btn {
+      background: var(--green);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 11px 18px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    button.copy-btn:hover { opacity: 0.92; }
+    button.copy-btn:active { transform: scale(0.98); }
+    button.copy-btn.copied { background: var(--accent); }
+    .link-btn {
+      display: inline-block;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--green);
+      color: var(--green);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+    .checklist {
+      padding-left: 20px;
+      margin: 8px 0 0;
+    }
+    .checklist li { margin-bottom: 6px; }
+    .tip {
+      background: #fff8eb;
+      border-left: 4px solid var(--accent);
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🌱 龍崎青農｜AI 行銷製圖 × 表單 × 農場網站 課堂小抄</h1>
+      <p>填好品牌資料 → 一鍵複製提示詞 → 貼到 Gemini / Flow / Sites，照著順序做就能完成！</p>
+    </header>
+
+    <div class="steps-bar">
+      <span class="step-pill">1. 填品牌卡</span>
+      <span class="step-pill">2. Gemini 產詞與文案</span>
+      <span class="step-pill">3. Flow 製圖下載</span>
+      <span class="step-pill">4. Google 表單接單</span>
+      <span class="step-pill">5. Google Sites + Canvas</span>
+    </div>
+
+    <!-- Step 1: 品牌卡 -->
+    <section class="card">
+      <h2>Step 1｜先填你的品牌卡（會自動套入下方提示詞）</h2>
+      <div class="grid-2">
+        <div>
+          <label for="farmName">農場 / 品牌名稱</label>
+          <input type="text" id="farmName" placeholder="例如：龍崎山丘綠竹筍園" oninput="updatePrompts()" />
+        </div>
+        <div>
+          <label for="product">主力產品與特色</label>
+          <input type="text" id="product" placeholder="例如：清晨現採綠竹筍、鮮甜脆嫩" oninput="updatePrompts()" />
+        </div>
+        <div>
+          <label for="audience">目標客群</label>
+          <input type="text" id="audience" placeholder="例如：重視食安的家庭主婦、中秋送禮客" oninput="updatePrompts()" />
+        </div>
+        <div>
+          <label for="style">風格與主色調</label>
+          <input type="text" id="style" placeholder="例如：溫暖質樸、森林綠與米白" oninput="updatePrompts()" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Step 2: Gemini 一次產三寶 -->
+    <section class="card">
+      <h2>Step 2｜複製給 Gemini：一次產出「Flow 提示詞＋網站文案＋表單欄位」</h2>
+      <div class="prompt-box" id="promptGemini"></div>
+      <div class="btn-row">
+        <button class="copy-btn" onclick="copyText('promptGemini', this)">📋 一鍵複製給 Gemini</button>
+        <a class="link-btn" href="https://gemini.google.com/" target="_blank" rel="noopener">開啟 Gemini ↗</a>
+      </div>
+      <div class="tip">💡 接著打開 <strong>Google Flow</strong>，把 Gemini 給你的英文提示詞複製過去生成圖片，選好圖後按「下載」存進電腦/平板。</div>
+    </section>
+
+    <!-- Step 3: Google 表單 -->
+    <section class="card">
+      <h2>Step 3｜5 分鐘建立 Google 訂購表單</h2>
+      <ol class="checklist">
+        <li>打開 <a href="https://forms.google.com/" target="_blank" rel="noopener">forms.google.com</a> 建立空白表單，貼上 Gemini 給你的標題與匯款/取貨說明。</li>
+        <li>點右上角「🎨 調色盤（自訂主題）」→ 頁首「選擇圖片」→ 上傳剛才 <strong>Flow 做的橫幅圖</strong>。</li>
+        <li>確認必備 5 欄位：<strong>訂購人姓名</strong>、<strong>聯絡電話 / LINE</strong>、<strong>訂購品項與盒數</strong>、<strong>取貨/配送地址</strong>、<strong>備註 / 匯款後五碼</strong>。</li>
+        <li>點上方「回覆」→ 點「<strong>連結至試算表</strong>」，讓訂單自動存成試算表。</li>
+      </ol>
+    </section>
+
+    <!-- Step 4: Canvas 互動小元件 -->
+    <section class="card">
+      <h2>Step 4｜（進階加分）用 Gemini Canvas 做互動小元件，貼進 Google Sites</h2>
+      <p style="margin:0 0 8px; font-size:0.92rem; color:var(--muted);">選一個貼給 Gemini，開啟 Canvas 生成後，右上角「複製程式碼」→ 到 Google Sites 按「插入 → 內嵌 → 內嵌程式碼」。</p>
+
+      <label>選項 A：伴手禮團購／運費試算器（放在 Google 表單上方最實用）</label>
+      <div class="prompt-box" id="promptCanvasA">請在 Canvas 製作一個「單一 HTML 檔案」的互動小元件，繁體中文、手機版好點擊，用來內嵌在 Google Sites 的訂購表單上方。
+- 商品與價格：【品項 A 每盒 500 元、品項 B 每盒 650 元】
+- 優惠規則：滿 2,000 元免運費（未滿運費 150 元）、滿 10 盒打 9 折。
+- 功能：讓顧客加減盒數，即時顯示「總金額」與「還差多少免運」，並提醒「算好數量後，請直接填寫下方訂購表單！」。</div>
+      <div class="btn-row" style="margin-bottom:16px;">
+        <button class="copy-btn" onclick="copyText('promptCanvasA', this)">📋 複製選項 A（試算器）</button>
+      </div>
+
+      <label>選項 B：農場產季互動日曆</label>
+      <div class="prompt-box" id="promptCanvasB">請在 Canvas 製作一個「單一 HTML 檔案」的互動小元件，繁體中文、風格溫暖（主色森林綠與米白），用來內嵌在 Google Sites 裡。
+- 內容：顯示【綠竹筍 / 鳳梨 / 〇〇】的 1–12 月產季狀態（盛產、限量、預購中、休耕）。
+- 功能：點選月份或作物按鈕，下方顯示當月推薦吃法與訂購提醒。高度精簡好嵌入，不要有多餘頁首頁尾。</div>
+      <div class="btn-row">
+        <button class="copy-btn" onclick="copyText('promptCanvasB', this)">📋 複製選項 B（產季日曆）</button>
+        <a class="link-btn" href="https://sites.google.com/" target="_blank" rel="noopener">開啟 Google Sites ↗</a>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    function val(id, fallback) {
+      const v = document.getElementById(id).value.trim();
+      return v || fallback;
+    }
+
+    function updatePrompts() {
+      const farm = val('farmName', '【龍崎〇〇農場】');
+      const prod = val('product', '【例如：清晨現採綠竹筍】');
+      const aud = val('audience', '【例如：重視鮮甜與產地直送的家庭主婦、送禮客】');
+      const style = val('style', '【例如：溫暖質樸、森林綠與米白】');
+
+      document.getElementById('promptGemini').textContent =
+`我是台南龍崎的青農，以下是我的品牌卡資料：
+- 農場名稱：${farm}
+- 主力產品：${prod}
+- 客群與特色：${aud}
+- 風格色調：${style}
+
+請幫我產出：
+1. 4 組 Google Flow 繪圖提示詞（英文為主，畫面留白不要出現任何文字）：
+   - 第 1 組【網站／表單橫幅圖（16:9 橫式）】：乾淨質感商品主視覺，適合放網站與 Google 表單頁首
+   - 第 2 組【商品介紹情境圖（1:1 方形）】：生活餐桌烹調情境，適合放網站商品區
+   - 第 3 組【FB 粉專貼文圖（4:5 直式或 1:1 方形）】：農民清晨採收／產地新鮮氛圍，吸睛好滑到
+   - 第 4 組【LINE 官方帳號推播圖（1:1 方形）】：高對比禮盒／開採特寫，預留上方或下方空間可加促銷字
+2. 網站與社群行銷文案（繁體中文）：
+   - 網站文案：主標語、100 字農場故事、3 個產品賣點與價格格式
+   - FB 粉專貼文（150 字內，含開頭吸睛金句＋產地故事＋「點網站／表單訂購」行動呼籲＋3 個 Hashtag）
+   - LINE 官方帳號推播（80 字內，簡短有感＋限時開採／早鳥提醒＋預留訂購連結位置）
+3. Google 表單訂購單設計：幫我規劃 5 個最精簡的訂購欄位（含選項格式與取貨/運費說明文字）。`;
+    }
+
+    function copyText(elementId, btn) {
+      const text = document.getElementById(elementId).textContent;
+      const done = () => {
+        const orig = btn.textContent;
+        btn.textContent = '✅ 已複製！快去貼上';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = orig;
+          btn.classList.remove('copied');
+        }, 1800);
+      };
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
+      } else {
+        fallbackCopy(text, done);
+      }
+    }
+
+    function fallbackCopy(text, cb) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); cb(); } catch (e) { alert('請手動選取文字複製'); }
+      document.body.removeChild(ta);
+    }
+
+    updatePrompts();
+  </script>
+</body>
+</html>
